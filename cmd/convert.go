@@ -33,6 +33,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Min is used when determing delay between keystrokes
+var Min int
+
+// Max is used when determing delay between keystrokes
+var Max int
+
 // convertCmd represents the convert command
 var convertCmd = &cobra.Command{
 	Use:   "convert <file>",
@@ -56,6 +62,8 @@ var convertCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(convertCmd)
+	convertCmd.Flags().IntVar(&Min, "min", 0, "Minimum value when determing delay between keystrokes")
+	convertCmd.Flags().IntVar(&Max, "max", 3, "Maximum value when determing delay between keystrokes")
 }
 
 func convert(path string) (string, string, error) {
@@ -90,7 +98,7 @@ func convert(path string) (string, string, error) {
 				newScript += "\t\tkeystroke \"" + character + "\"\n"
 			}
 			rand.Seed(time.Now().UnixNano())
-			randNum := rand.Intn(3-1) + 1
+			randNum := rand.Intn(Max - Min)
 			newScript += fmt.Sprintf("\t\tdelay 0.%d\n", randNum)
 		}
 	}

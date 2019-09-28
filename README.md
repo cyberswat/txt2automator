@@ -1,4 +1,4 @@
-# txt2autmoator
+# txt2automator
 
 Simple command line utility that accepts a file as input and converts it into an applescript file. You can then use the applescript file in Apple's Automator program to simulate typing the original files contents as a user in iTerm.
 
