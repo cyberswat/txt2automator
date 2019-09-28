@@ -39,22 +39,47 @@ var Min int
 // Max is used when determing delay between keystrokes
 var Max int
 
+// Dir is used to read all files from instead of converting individual files.
+var Dir string
+
 // convertCmd represents the convert command
 var convertCmd = &cobra.Command{
 	Use:   "convert <file>",
 	Short: "convert a file into applescript",
 	Long:  `Takes the given file and converts into an applescript file.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if len(args) == 0 {
-			return errors.New("no file given to convert")
+		if len(args) == 0 && Dir == "" {
+			return errors.New("no file or directory given to convert")
 		}
-		for i := 0; i < len(args); i++ {
-			newScript, fileName, err := convert(args[i])
-			if err != nil {
-				return err
+		if len(args) != 0 && Dir != "" {
+			return errors.New("please specify a file or a directory to convert instead of both")
+		}
+
+		if len(args) != 0 {
+			for i := 0; i < len(args); i++ {
+				err := processPath(args[i])
+				if err != nil {
+					return err
+				}
 			}
-			writeFile(newScript, fileName)
-			fmt.Printf("%s successfully converted to %s\n", args[i], fileName)
+		}
+
+		if Dir != "" {
+			fmt.Println("Need to convert " + Dir)
+			files, err := ioutil.ReadDir(Dir)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			for _, f := range files {
+				if strings.HasPrefix(f.Name(), ".") == false {
+					absPath := filepath.Join(Dir, f.Name())
+					err := processPath(absPath)
+					if err != nil {
+						return err
+					}
+				}
+			}
 		}
 		return nil
 	},
@@ -64,6 +89,7 @@ func init() {
 	rootCmd.AddCommand(convertCmd)
 	convertCmd.Flags().IntVar(&Min, "min", 0, "Minimum value when determing delay between keystrokes")
 	convertCmd.Flags().IntVar(&Max, "max", 3, "Maximum value when determing delay between keystrokes")
+	convertCmd.Flags().StringVarP(&Dir, "dir", "d", "", "Source directory to read all files from")
 }
 
 func convert(path string) (string, string, error) {
@@ -126,4 +152,14 @@ func writeFile(contents string, fileName string) {
 		fmt.Println(err)
 		return
 	}
+}
+
+func processPath(path string) error {
+	newScript, fileName, err := convert(path)
+	if err != nil {
+		return err
+	}
+	writeFile(newScript, fileName)
+	fmt.Printf("%s successfully converted to %s\n", path, fileName)
+	return nil
 }
