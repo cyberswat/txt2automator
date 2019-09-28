@@ -107,6 +107,8 @@ func convert(path string) (string, string, error) {
 	newScript := "on run {input, parameters}\n\n"
 	newScript += "\ttell application \"iTerm\" to activate\n\n"
 	newScript += "\ttell application \"System Events\"\n"
+	newScript += "\t\tkeystroke \"k\" using command down\n"
+
 	for {
 		if c, _, err := r.ReadRune(); err != nil {
 			if err == io.EOF {
