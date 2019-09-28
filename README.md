@@ -22,3 +22,8 @@ Once you have the file converted you'll want to copy the converted file's conten
 
 # Potential Uses
 I use this by writing a script file that contents what I would normally type while giving a presentation. Converting the script into an automator workflow allows me to use Quicktime to record a video of what I would normally type. Embedding the video into a program like Keynote allows me to capture the output into a presentation slide for consistent playback without human error.
+
+# Example
+Here is an example video I created out of the scripts in https://github.com/cyberswat/presentation-scripts/tree/master/macos-install-ddev-local. It walks through a quick install of the [DDEV-Local](https://github.com/drud/ddev) tool using [Homebrew](https://brew.sh/).
+
+[![Example Video with txt2Automator](https://img.youtube.com/vi/1shGZAQ358I/0.jpg)](https://www.youtube.com/watch?v=1shGZAQ358I)
